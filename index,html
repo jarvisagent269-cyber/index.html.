@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jarvis AI – Aapka Apna Voice AI Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#030712;--fg:#eaf2ff;--muted:#8b9bbd;--glass:rgba(255,255,255,.045);--line:rgba(80,160,255,.2);--a1:#22d3ee;--a2:#8b5cf6;--a3:#3b82f6;--chip:#22d3ee;--chipfg:#030712;--node:34,211,238;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f3f7ff;--fg:#0a1630;--muted:#53628a;--glass:rgba(255,255,255,.85);--line:rgba(30,80,200,.16);--a1:#0891b2;--a2:#7c3aed;--a3:#2563eb;--chip:#0a1630;--chipfg:#f3f7ff;--node:37,99,235}}
+:root[data-theme="light"]{--bg:#f3f7ff;--fg:#0a1630;--muted:#53628a;--glass:rgba(255,255,255,.85);--line:rgba(30,80,200,.16);--a1:#0891b2;--a2:#7c3aed;--a3:#2563eb;--chip:#0a1630;--chipfg:#f3f7ff;--node:37,99,235}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Manrope,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.65;overflow-x:hidden}
+h1,h2,h3,.brand,.price{font-family:Outfit,'Segoe UI',Arial,sans-serif}
+#prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--a1),var(--a2));z-index:50}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#glow{position:fixed;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.24),transparent 65%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);left:50%;top:30%}
+.blob{position:fixed;border-radius:50%;filter:blur(120px);opacity:.3;z-index:0;pointer-events:none;animation:float 16s ease-in-out infinite}
+.b1{width:500px;height:500px;background:var(--a2);top:-160px;right:-120px}
+.b2{width:440px;height:440px;background:var(--a3);bottom:-120px;left:-100px;animation-delay:-8s}
+@keyframes float{50%{transform:translate(-50px,60px) scale(1.2)}}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px;position:relative;z-index:1}
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:color-mix(in srgb,var(--bg) 70%,transparent);border-bottom:1px solid var(--line)}
+header.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:3px;color:var(--fg);text-decoration:none}
+.brand svg{width:40px;height:40px;color:var(--chip)}
+.links a{color:var(--muted);text-decoration:none;margin-left:26px;font-size:15px;font-weight:600;transition:.2s;position:relative}
+.links a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:0;background:var(--a1);transition:.3s}
+.links a:hover{color:var(--fg)}.links a:hover::after{width:100%}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:14px;font-weight:700;text-decoration:none;border:1px solid var(--line);color:var(--fg);transition:.25s;cursor:pointer;background:var(--glass);font-size:15px;font-family:inherit}
+.btn.p{background:linear-gradient(120deg,var(--a3),var(--a2),#06b6d4);background-size:200% 100%;border:0;color:#fff;box-shadow:0 12px 40px -10px var(--a2);animation:slide 4s ease infinite}
+@keyframes slide{50%{background-position:100% 0}}
+.btn.p::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);animation:sheen 3.2s infinite}
+@keyframes sheen{to{left:140%}}
+.btn:hover{transform:translateY(-4px) scale(1.03)}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;padding:70px 0 40px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:99px;border:1px solid var(--line);background:var(--glass);font-size:13px;color:var(--muted);font-weight:600}
+.badge i{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:ping 1.6s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 #22c55e}100%{box-shadow:0 0 0 10px transparent}}
+.hero h1{font-size:clamp(40px,6.6vw,74px);line-height:1.04;margin:20px 0 18px;letter-spacing:-2px;font-weight:800}
+.grad{background:linear-gradient(110deg,var(--a1),var(--a3),var(--a2),var(--a1));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:250% 0}}
+.caret{display:inline-block;width:4px;height:.85em;background:var(--a1);margin-left:4px;vertical-align:-.06em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.sub{color:var(--muted);font-size:clamp(16px,2vw,19px);max-width:540px;margin:0 0 30px}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.stats{display:flex;gap:clamp(22px,4vw,48px);margin-top:44px;flex-wrap:wrap}
+.stats b{display:block;font-family:Outfit,sans-serif;font-size:34px}.stats span{color:var(--muted);font-size:14px}
+.orb{position:relative;aspect-ratio:1;max-width:460px;width:100%;margin:auto;display:grid;place-items:center;animation:bob 6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-16px)}}
+.orb svg.lg{width:62%;color:var(--chip);filter:drop-shadow(0 0 26px rgba(34,211,238,.6));position:relative;z-index:2}
+.ring{position:absolute;border-radius:50%;border:1.5px dashed var(--a1);opacity:.55}
+.r1{inset:4%;animation:spin 24s linear infinite}.r2{inset:14%;border-style:solid;border-color:var(--a2);opacity:.3;animation:spin 16s linear infinite reverse}
+.r3{inset:-4%;border-color:var(--a3);opacity:.25;animation:spin 40s linear infinite}
+.ring::before{content:"";position:absolute;top:-6px;left:50%;width:12px;height:12px;border-radius:50%;background:var(--a1);box-shadow:0 0 16px var(--a1)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pulse{position:absolute;inset:18%;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.45),transparent 70%);animation:pl 3s ease-in-out infinite}
+@keyframes pl{50%{transform:scale(1.35);opacity:.4}}
+.flow line,.flow polyline{stroke-dasharray:14 12;animation:dash 1.4s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-26}}
+.flow-n{animation:np 2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes np{50%{transform:scale(1.35)}}
+.mq{overflow:hidden;border-block:1px solid var(--line);padding:16px 0;position:relative;z-index:1;background:var(--glass)}
+.mq div{display:flex;gap:50px;width:max-content;animation:mq 30s linear infinite;font-family:Outfit,sans-serif;font-weight:700;font-size:20px;color:var(--muted)}
+.mq span::before{content:"✦";color:var(--a1);margin-right:50px}
+@keyframes mq{to{transform:translateX(-50%)}}
+section{padding:84px 0}
+.eyebrow{text-align:center;color:var(--a1);font-size:13px;letter-spacing:3px;font-weight:700;text-transform:uppercase}
+h2{font-size:clamp(30px,5vw,50px);text-align:center;margin:10px 0 46px;letter-spacing:-1px;line-height:1.1;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{position:relative;border:1px solid var(--line);background:var(--glass);border-radius:22px;padding:28px;overflow:hidden;transition:.3s}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(300px circle at var(--x,50%) var(--y,0%),rgba(59,130,246,.28),transparent 60%);opacity:0;transition:.3s}
+.card:hover{transform:translateY(-8px);border-color:var(--a1)}.card:hover::before{opacity:1}
+.ic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a3),var(--a2));color:#fff;margin-bottom:18px;position:relative;transition:.4s}
+.card:hover .ic{transform:rotate(-8deg) scale(1.12)}
+.ic svg{width:25px;height:25px}
+.card h3{margin:0 0 8px;font-size:20px;position:relative}.card p{margin:0;color:var(--muted);font-size:15px;position:relative}
+.steps{counter-reset:s}.steps .card::after{counter-increment:s;content:"0" counter(s);position:absolute;top:12px;right:22px;font:800 50px Outfit,sans-serif;opacity:.1}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:20px;perspective:1000px}
+.plan{position:relative;border:1px solid var(--line);background:var(--glass);border-radius:26px;padding:30px 26px;transition:transform .15s,border-color .3s;transform-style:preserve-3d;display:flex;flex-direction:column}
+.plan.hot{border:0;background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(var(--ang,0deg),var(--a1),var(--a2),var(--a3),var(--a1)) border-box;border:2px solid transparent;animation:rot 5s linear infinite}
+@property --ang{syntax:"<angle>";initial-value:0deg;inherits:false}
+@keyframes rot{to{--ang:360deg}}
+.plan .tag{position:absolute;top:-13px;right:20px;background:linear-gradient(120deg,var(--a3),var(--a2));color:#fff;font-size:12px;font-weight:800;padding:5px 12px;border-radius:99px;letter-spacing:1px;animation:wob 2s ease-in-out infinite}
+@keyframes wob{50%{transform:rotate(3deg) scale(1.06)}}
+.plan h3{margin:0;font-size:24px;font-family:Outfit,sans-serif}
+.plan small{color:var(--muted)}
+.old{text-decoration:line-through;color:var(--muted);font-size:17px;margin-top:18px}
+.price{font-size:46px;font-weight:800;line-height:1.1;margin:2px 0 4px}
+.price span{font-size:18px;font-weight:600;color:var(--muted)}
+.save{display:inline-block;align-self:flex-start;background:rgba(34,197,94,.15);color:#22c55e;font-weight:700;font-size:13px;padding:4px 10px;border-radius:8px;margin-bottom:18px}
+.plan ul{list-style:none;padding:0;margin:0 0 24px;flex:1}
+.plan li{display:flex;gap:10px;font-size:14.5px;padding:6px 0;color:var(--fg)}
+.plan li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12l5 5 9-10' fill='none' stroke='%23000' stroke-width='3.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12l5 5 9-10' fill='none' stroke='%23000' stroke-width='3.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.plan li.pl{color:var(--a1);font-weight:700}.plan li.pl::before{background:var(--a1)}
+.plan .btn{justify-content:center}
+.all{margin-top:34px;text-align:center;border:1px dashed var(--line);border-radius:20px;padding:22px;color:var(--muted)}
+.all b{color:var(--fg)}
+details{border:1px solid var(--line);background:var(--glass);border-radius:16px;padding:18px 22px;margin:0 auto 12px;max-width:760px;transition:.25s}
+details[open]{border-color:var(--a1)}
+summary{cursor:pointer;font-weight:700;font-size:17px;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--a1);font-size:24px;line-height:1;transition:.3s}details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);margin:12px 0 0}
+.final{position:relative;overflow:hidden;text-align:center;border:1px solid var(--line);border-radius:32px;padding:70px 24px;background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(139,92,246,.22))}
+.final::before{content:"";position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent,rgba(34,211,238,.28),transparent 30%);animation:spin 9s linear infinite}
+.final>*{position:relative}.final h2{margin-bottom:14px}.final p{color:var(--muted);max-width:520px;margin:0 auto 28px}
+footer{border-top:1px solid var(--line);padding:34px 0;position:relative;z-index:1}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;color:var(--muted);font-size:14px}
+footer .brand svg{width:34px;height:34px}
+.rv{opacity:0;transform:translateY(40px) scale(.97);filter:blur(6px);transition:opacity .8s,transform .8s,filter .8s}.rv.in{opacity:1;transform:none;filter:none}
+.rl{transform:translateX(-50px) scale(.97)}.rr{transform:translateX(50px) scale(.97)}
+@media (max-width:860px){.hero{grid-template-columns:1fr;text-align:center;padding-top:44px}.sub{margin-inline:auto}.cta,.stats{justify-content:center}.orb{max-width:320px;order:-1}.links{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none;filter:none}}
+.wa{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:40;width:62px;height:62px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 10px 34px rgba(37,211,102,.55);animation:wob2 3s ease-in-out infinite}
+.wa svg{width:32px;height:32px}
+.wa::before,.wa::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #25d366;animation:ring 2s infinite}.wa::after{animation-delay:1s}
+@keyframes ring{to{transform:scale(1.9);opacity:0}}
+@keyframes wob2{0%,100%{transform:rotate(0)}10%{transform:rotate(-12deg)}20%{transform:rotate(12deg)}30%{transform:rotate(-8deg)}40%{transform:rotate(0)}}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;width:130px;height:2px;background:linear-gradient(90deg,var(--a1),transparent);opacity:0;animation:shoot 5s linear infinite}
+@keyframes shoot{0%{transform:translate(0,0) rotate(35deg);opacity:0}8%{opacity:1}60%,100%{transform:translate(560px,390px) rotate(35deg);opacity:0}}
+.fi{position:absolute;width:56px;height:56px;border-radius:17px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;color:var(--a1);z-index:3;animation:fl 5s ease-in-out infinite;box-shadow:0 10px 30px -10px var(--a3)}
+.fi svg{width:26px;height:26px}
+@keyframes fl{50%{transform:translateY(-16px) rotate(7deg)}}
+.rp{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);animation:rip .65s linear;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+h2::after{content:"";display:block;height:4px;width:0;margin:16px auto 0;border-radius:4px;background:linear-gradient(90deg,var(--a1),var(--a2));transition:width 1s .3s}
+h2.in::after{width:90px}
+#cf{position:fixed;inset:0;width:100%;height:100%;z-index:60;pointer-events:none}
+.ordr{margin-top:30px;text-align:center;border:1px solid var(--line);border-radius:28px;padding:40px 20px;background:var(--glass);position:relative;overflow:hidden}
+.ordr::before{content:"";position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent,rgba(37,211,102,.22),transparent 28%);animation:spin 8s linear infinite}
+.ordr>*{position:relative}.ordr span{color:var(--muted);font-weight:600}
+.num{display:block;font:800 clamp(34px,8vw,68px) Outfit,sans-serif;letter-spacing:2px;margin:10px 0 22px;background:linear-gradient(100deg,#25d366,var(--a1),var(--a2),#25d366);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+.rsum{display:grid;grid-template-columns:auto 1fr;gap:clamp(20px,5vw,60px);align-items:center;max-width:760px;margin:0 auto 18px;border:1px solid var(--line);background:var(--glass);border-radius:26px;padding:28px}
+.big{text-align:center}.big b{font:800 clamp(56px,10vw,84px) Outfit,sans-serif;line-height:1;background:linear-gradient(120deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent;display:block}
+.big small{color:var(--muted)}.sr{font-size:24px;letter-spacing:3px;margin:6px 0}
+.st{display:inline-block;opacity:0;transform:scale(0) rotate(-90deg)}
+.in .st{animation:sp .55s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes sp{to{opacity:1;transform:none}}
+.dr{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);margin:7px 0}
+.dr i{flex:1;height:8px;border-radius:8px;background:var(--line);overflow:hidden}
+.dr i u{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--a1),var(--a2));transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.note{text-align:center;color:var(--muted);font-size:13px;margin:0 0 26px}
+.rvw{overflow:hidden;margin-bottom:16px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.rtrack{display:flex;gap:16px;width:max-content;animation:mq 55s linear infinite}
+.rvw.rev .rtrack{animation-direction:reverse}.rvw:hover .rtrack{animation-play-state:paused}
+.rc{flex:none;width:310px;border:1px solid var(--line);background:var(--glass);border-radius:20px;padding:22px;transition:.3s;position:relative}
+.rc:hover{transform:translateY(-8px) scale(1.03);border-color:var(--a1);box-shadow:0 20px 50px -20px var(--a3)}
+.rc .h{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:700 18px Outfit,sans-serif;color:#fff;background:linear-gradient(135deg,var(--a3),var(--a2))}
+.rc b{display:block;font-size:15px}.rc small{color:var(--muted)}
+.rc .s{color:#fbbf24;letter-spacing:2px;margin-bottom:6px}.rc p{margin:0;font-size:14.5px;color:var(--fg);white-space:normal}
+.rc .tg{position:absolute;top:14px;right:14px;font-size:10px;padding:3px 8px;border-radius:99px;border:1px dashed var(--line);color:var(--muted)}
+.bub{position:fixed;bottom:-30px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.5),transparent 70%);pointer-events:none;z-index:0;animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-115vh) translateX(40px);opacity:0}}
+.sparkle{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:70;background:var(--a1);box-shadow:0 0 12px var(--a2);animation:spk .8s forwards}
+@keyframes spk{to{transform:translateY(24px) scale(0);opacity:0}}
+.ic{animation:icg 4s ease-in-out infinite}@keyframes icg{50%{box-shadow:0 0 28px -4px var(--a2)}}
+section::before{content:"";display:block;height:1px;margin:0 auto 70px;width:0;background:linear-gradient(90deg,transparent,var(--a1),var(--a2),transparent);animation:ln 1.6s .2s forwards}
+@keyframes ln{to{width:min(80%,700px)}}
+@media (max-width:640px){.rsum{grid-template-columns:1fr}.rc{width:270px}}
+.plans{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.plan h3{font-size:19px;letter-spacing:1.5px}.plan .price{margin-top:18px;font-size:44px}.plan .btn{border:0;font-family:inherit;width:100%;text-transform:uppercase;letter-spacing:1px;cursor:pointer}
+.plan li.ev{font-weight:700;color:var(--a1)}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:34px}
+.rules div{border:1px solid var(--line);background:var(--glass);border-radius:18px;padding:20px}.rules b{font-family:Outfit,sans-serif}.rules p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.five{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.modal{position:fixed;inset:0;z-index:80;background:rgba(2,6,16,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;padding:16px;overflow-y:auto}
+.modal[hidden]{display:none}
+.mbox{position:relative;width:100%;max-width:520px;max-height:calc(100vh - 32px);overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 30px 100px -20px var(--a3);animation:pop2 .35s}
+.mbox.wide{max-width:980px}@keyframes pop2{from{opacity:0;transform:translateY(20px) scale(.97)}}
+.mx{position:absolute;top:12px;right:14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--glass);color:var(--fg);font-size:22px;cursor:pointer}
+.mbox h3{font:700 24px Outfit,sans-serif;margin:0 0 14px}.mbox h4{font:700 16px Outfit,sans-serif;margin:22px 0 6px}
+.mut{color:var(--muted);font-size:14px;margin:6px 0 12px}
+.sum{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--a3);background:rgba(59,130,246,.1);border-radius:16px;padding:14px 16px}
+.sum small{display:block;color:var(--muted);font-size:12px}.sum .sp{text-align:right;font:800 24px Outfit,sans-serif}
+.fld{margin:12px 0}.fld label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.fld input,.fld select{width:100%;background:var(--glass);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;font-size:15px}
+.fld input:focus,.fld select:focus{outline:2px solid var(--a1);border-color:transparent}
+.fld select option{color:#000}
+em{display:block;color:#fb7185;font-size:12.5px;font-style:normal;min-height:0}
+.ck{display:flex;gap:10px;font-size:13.5px;color:var(--muted);margin:14px 0 4px;cursor:pointer}.ck input{margin-top:3px;accent-color:var(--a1)}
+.wide{width:100%;justify-content:center;margin-top:14px}
+.bn{border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:14px;border:1px solid}
+.bn.ok{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.5);color:#4ade80}.bn.wn{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.5);color:#fbbf24}.bn.in{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.5)}
+.oid{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px dashed var(--a1);border-radius:14px;padding:12px 14px;margin-bottom:12px}
+.oid small{color:var(--muted);width:100%}.oid b{font:800 22px Outfit,sans-serif;letter-spacing:1px;color:var(--a1)}
+.tb{background:var(--glass);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;font:inherit;font-size:13px}
+.pm{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;background:var(--glass)}.pm b{display:block}.pm span{color:var(--muted);font-size:14px;white-space:pre-wrap}
+.ao{border:1px solid var(--line);background:var(--glass);border-radius:16px;padding:16px;margin:10px 0}
+.ao .t{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:700}.ao .t b{color:var(--a1);font-family:Outfit,sans-serif}
+.ao .m{color:var(--muted);font-size:13.5px;margin:6px 0 10px;word-break:break-word}.ao .m a{color:var(--a1)}
+.ao .r{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end}
+.ac{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.ac .fld{margin:0;min-width:150px;flex:1}
+.pill{display:inline-block;font-size:12px;padding:3px 10px;border-radius:99px;background:rgba(59,130,246,.18);margin-right:6px}
+</style>
+</head>
+<body>
+<div id="prog"></div><canvas id="bg"></canvas><div id="glow"></div><div class="blob b1"></div><div class="blob b2"></div><div id="stars"></div><canvas id="cf"></canvas><a class="wa" target="_blank" rel="noopener" aria-label="WhatsApp" href="https://wa.me/923131039669?text=Assalam%20o%20Alaikum!%20Mujhe%20Jarvis%20AI%20order%20karna%20hai."><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/><path d="M9 8.5c0 3.5 3 6.5 6.500 6.500l1-1.500-2-1-1 .8c-1-.4-2-1.400-2.400-2.400l.8-1-1-2z"/></svg></a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="130 130 460 460">
+<g fill="none" stroke="currentColor" stroke-width="12"><line x1="368" y1="153" x2="368" y2="268"/><polyline points="287,184 320,217 320,268"/><polyline points="448,184 415,217 415,268"/><line x1="368" y1="582" x2="368" y2="468"/><polyline points="287,551 320,518 320,468"/><polyline points="448,551 415,518 415,468"/><line x1="153" y1="367" x2="268" y2="367"/><polyline points="185,287 218,320 268,320"/><polyline points="185,447 218,414 268,414"/><line x1="582" y1="367" x2="468" y2="367"/><polyline points="552,287 518,320 468,320"/><polyline points="552,447 518,414 468,414"/></g>
+<g fill="currentColor"><circle cx="368" cy="153" r="22"/><circle cx="287" cy="184" r="22"/><circle cx="448" cy="184" r="22"/><circle cx="368" cy="582" r="22"/><circle cx="287" cy="551" r="22"/><circle cx="448" cy="551" r="22"/><circle cx="153" cy="367" r="22"/><circle cx="185" cy="287" r="22"/><circle cx="185" cy="447" r="22"/><circle cx="582" cy="367" r="22"/><circle cx="552" cy="287" r="22"/><circle cx="552" cy="447" r="22"/><rect x="262" y="262" width="212" height="212" rx="10"/></g>
+<g fill="var(--chipfg)" font-family="Segoe UI,Arial,sans-serif" font-weight="700" text-anchor="middle"><text x="368" y="361" font-size="43">JARVIS</text><text x="368" y="413" font-size="43">AI</text></g></symbol></svg>
+
+<header class="nav"><div class="wrap">
+<a class="brand" href="#top"><svg><use href="#logo"/></svg>JARVIS</a>
+<nav class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#order">How it works</a><a href="#faq">FAQ</a></nav>
+<a class="btn p" href="#pricing">View plans</a></div></header>
+
+<main class="wrap" id="top">
+<div class="hero">
+<div>
+<span class="badge rv rl"><i></i>Voice AI · Hindi, Urdu &amp; English</span>
+<h1 class="rv rl">Aapka apna<br><span class="grad" id="typed">Jarvis</span><span class="caret"></span></h1>
+<p class="sub rv rl">Ek voice AI assistant jo aapki baat sunta hai, samajhta hai aur bol ke jawab deta hai. Mobile, Chromebook, Laptop aur PC, sab par.</p>
+<div class="cta rv rl"><a class="btn p" href="#pricing">Choose your plan</a><a class="btn" href="#features">Features dekho</a></div>
+<div class="stats rv rl"><div><b data-n="3">0</b><span>Packages</span></div><div><b>One-time</b><span>Payment</span></div><div><b>Lifetime</b><span>Software access</span></div></div>
+</div>
+<div class="orb rv rr"><div class="ring r3"></div><div class="ring r1"></div><div class="ring r2"></div><div class="pulse"></div><div class="fi" style="top:4%;left:0"></div><div class="fi" style="top:10%;right:-2%;animation-delay:-1.2s"></div><div class="fi" style="bottom:8%;left:2%;animation-delay:-2.4s"></div><div class="fi" style="bottom:12%;right:0;animation-delay:-3.6s"></div>
+<svg class="lg" viewBox="130 130 460 460"><g class="flow" fill="none" stroke="currentColor" stroke-width="12"><line x1="368" y1="153" x2="368" y2="268"/><polyline points="287,184 320,217 320,268"/><polyline points="448,184 415,217 415,268"/><line x1="368" y1="582" x2="368" y2="468"/><polyline points="287,551 320,518 320,468"/><polyline points="448,551 415,518 415,468"/><line x1="153" y1="367" x2="268" y2="367"/><polyline points="185,287 218,320 268,320"/><polyline points="185,447 218,414 268,414"/><line x1="582" y1="367" x2="468" y2="367"/><polyline points="552,287 518,320 468,320"/><polyline points="552,447 518,414 468,414"/></g>
+<g fill="currentColor"><g id="nodes"><circle class="flow-n" cx="368" cy="153" r="22"/><circle class="flow-n" cx="287" cy="184" r="22" style="animation-delay:.2s"/><circle class="flow-n" cx="448" cy="184" r="22" style="animation-delay:.4s"/><circle class="flow-n" cx="368" cy="582" r="22" style="animation-delay:.6s"/><circle class="flow-n" cx="287" cy="551" r="22" style="animation-delay:.8s"/><circle class="flow-n" cx="448" cy="551" r="22" style="animation-delay:1s"/><circle class="flow-n" cx="153" cy="367" r="22" style="animation-delay:1.2s"/><circle class="flow-n" cx="185" cy="287" r="22" style="animation-delay:1.4s"/><circle class="flow-n" cx="185" cy="447" r="22" style="animation-delay:1.6s"/><circle class="flow-n" cx="582" cy="367" r="22" style="animation-delay:1.8s"/><circle class="flow-n" cx="552" cy="287" r="22" style="animation-delay:.3s"/><circle class="flow-n" cx="552" cy="447" r="22" style="animation-delay:.9s"/></g><rect x="262" y="262" width="212" height="212" rx="10"/></g>
+<g fill="var(--chipfg)" font-family="Outfit,Segoe UI,Arial,sans-serif" font-weight="800" text-anchor="middle"><text x="368" y="361" font-size="43">JARVIS</text><text x="368" y="413" font-size="43">AI</text></g></svg></div>
+</div>
+</main>
+
+<div class="mq"><div id="mq"></div></div>
+
+<main class="wrap">
+<section id="features"><div class="eyebrow rv">Features</div><h2 class="rv">Ek assistant, bohot saari taaqat</h2>
+<div class="grid">
+<div class="card rv rl"><div class="ic" data-i="mic"></div><h3>Voice conversation</h3><p>Seedha muh se bolo, Jarvis real-time mein sunke samajhta hai.</p></div>
+<div class="card rv"><div class="ic" data-i="vol"></div><h3>Bol ke jawab</h3><p>Jawab screen par bhi aata hai aur natural awaaz mein bhi.</p></div>
+<div class="card rv rr"><div class="ic" data-i="globe"></div><h3>Multi-language</h3><p>Hindi, Urdu aur English, ek click mein zabaan badlo.</p></div>
+<div class="card rv rl"><div class="ic" data-i="clock"></div><h3>Smart tasks</h3><p>Time, date, reminders aur roz ke kaam aasaan banata hai.</p></div>
+<div class="card rv"><div class="ic" data-i="search"></div><h3>Web search</h3><p>Internet se taaza jaankari dhoondh kar seedha batata hai.</p></div>
+<div class="card rv rr"><div class="ic" data-i="file"></div><h3>File handling</h3><p>Documents padhna, likhna aur sambhalna, sab voice se.</p></div>
+<div class="card rv rl"><div class="ic" data-i="bolt"></div><h3>Automation</h3><p>Baar baar hone wale kaam khud ba khud ho jaate hain.</p></div>
+<div class="card rv"><div class="ic" data-i="msg"></div><h3>Chat history</h3><p>Puri baat-cheet saaf tareeke se likhi rehti hai.</p></div>
+<div class="card rv rr"><div class="ic" data-i="shield"></div><h3>Private aur safe</h3><p>Aapka data aapka hai, poori privacy ke saath.</p></div>
+</div></section>
+
+<section id="how"><div class="eyebrow rv">Using Jarvis</div><h2 class="rv">Teen simple steps</h2>
+<div class="grid steps">
+<div class="card rv rl"><div class="ic" data-i="mic"></div><h3>Bolo</h3><p>Apna sawal ya kaam bolo.</p></div>
+<div class="card rv"><div class="ic" data-i="brain"></div><h3>Jarvis samajhta hai</h3><p>Aapki awaaz ka matlab samajh kar kaam ki planning karta hai.</p></div>
+<div class="card rv rr"><div class="ic" data-i="vol"></div><h3>Kaam ho jata hai</h3><p>Turant bol ke jawab deta hai aur kaam khatam kar deta hai.</p></div>
+</div></section>
+
+<section id="pricing"><div class="eyebrow rv">Pricing</div><h2 class="rv">Choose your <span class="grad">JARVIS</span> plan</h2>
+<div class="plans" id="plans"></div>
+<div class="rules rv">
+<div><b>Device compatibility</b><p>JARVIS can be set up for Mobile, Chromebook, Laptop and PC. Features and performance can vary by device and browser, so please confirm your device with us on WhatsApp before ordering.</p></div>
+<div><b>Lifetime access</b><p>Lifetime means lifetime access to the JARVIS software plan you purchase.</p></div>
+<div><b>Monthly AI credits</b><p>Monthly AI credits are included according to your package and are limited. Additional credits may require separate payment.</p></div>
+</div></section>
+
+<section id="order"><div class="eyebrow rv">How it works</div><h2 class="rv">From order to first command in 5 steps</h2>
+<div class="grid steps five">
+<div class="card rv"><div class="ic" data-i="file"></div><h3>Choose Your Plan</h3><p>Pick Starter, Professional or Ultimate.</p></div>
+<div class="card rv"><div class="ic" data-i="msg"></div><h3>Place Your Order</h3><p>Enter your name, email and WhatsApp number, confirm, and receive your order ID.</p></div>
+<div class="card rv"><div class="ic" data-i="shield"></div><h3>Payment Confirmation</h3><p>Pay as instructed, then submit your payment reference. We verify it manually.</p></div>
+<div class="card rv"><div class="ic" data-i="bolt"></div><h3>Account Activation</h3><p>After payment is verified, our team activates your account.</p></div>
+<div class="card rv"><div class="ic" data-i="mic"></div><h3>Start Using JARVIS</h3><p>Begin talking to JARVIS on your device.</p></div>
+</div></section>
+
+<section id="faq"><div class="eyebrow rv">FAQ</div><h2 class="rv">Aksar pooche gaye sawal</h2>
+<details class="rv"><summary>How do I order?</summary><p>Choose a plan, tap its button and fill in the order form. You receive an order ID and payment instructions. Your order is activated only after we verify your payment.</p></details>
+<details class="rv"><summary>Is the payment one-time?</summary><p>Yes. Each package is a one-time payment with lifetime access to the purchased software plan. Monthly AI credits are included per package, and additional credits may require separate payment.</p></details>
+<details class="rv"><summary>Which plan should I choose?</summary><p>Starter covers voice conversation and basic assistance. Professional adds AI Office, multiple AI agents, file handling and WhatsApp integration. Ultimate adds advanced automation and premium support.</p></details>
+<details class="rv"><summary>Kaunsi languages chalti hain?</summary><p>Hindi, Urdu aur English, sab plans mein.</p></details>
+<details class="rv"><summary>How is my order information used?</summary><p>Your name, email and WhatsApp number are used only to process your order and contact you about it.</p></details>
+</section>
+
+<section><div class="final rv"><h2>Aaj hi Jarvis apne device par lao</h2><p>Pick your plan and place your order in under a minute.</p><a class="btn p" href="#pricing">Choose your plan</a></div></section>
+</main>
+
+<footer><div class="wrap"><a class="brand" href="#top"><svg><use href="#logo"/></svg>JARVIS AI</a><span>© 2026 Jarvis AI. Saare haq mehfooz. · <a href="#admin" style="color:inherit;opacity:.6">Admin</a></span></div></footer>
+<div class="modal" id="md" hidden role="dialog" aria-modal="true" aria-labelledby="mt"><div class="mbox"><button class="mx" id="mx" aria-label="Close">&times;</button><div id="mb"></div></div></div>
+<div class="modal" id="adm" hidden role="dialog" aria-modal="true" aria-label="Order management"><div class="mbox wide"><button class="mx" id="ax" aria-label="Close">&times;</button><div id="ab"></div></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const P={mic:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/>',vol:'<path d="M11 5 6 9H3v6h3l5 4zM16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14"/>',globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>',clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',brain:'<circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="12" cy="11" r="2"/><path d="M7.5 7.5 11 10M16.5 7.5 13 10M12 13v3"/>',search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-5-5"/>',file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8"/>',bolt:'<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>'};
+/* ===== CONFIG (apni details yahan) ===== */
+const CFG={WA:"923131039669",       // WhatsApp (country code ke saath)
+ API:"",                            // optional: apna secure backend URL jo order JSON receive kare
+ PAY:[],                            // e.g. [{name:"JazzCash",details:"Title: ...\nNumber: ..."}]
+ CUR:"Rs."};
+const PK=[
+{k:"starter",n:"JARVIS STARTER",btn:"Get Starter",p:2999,f:["One-time payment","Lifetime software access","AI Voice Conversation","Smart AI Assistant","Basic Browser Assistance","Reminders & Task Management","Monthly AI Credits","Standard Support"]},
+{k:"pro",n:"JARVIS PROFESSIONAL",btn:"Get Professional",p:5500,hot:1,f:["One-time payment","Lifetime software access",{t:"Everything in Starter"},"Advanced Voice Interaction","AI Office","Multiple AI Agents","File Handling & Management","WhatsApp Integration","Website Assistance","Advanced AI Workflows","Higher Monthly AI Credits","Priority Support"]},
+{k:"ultimate",n:"JARVIS ULTIMATE",btn:"Get Ultimate",p:8999,f:["One-time payment","Lifetime software access",{t:"Everything in Professional"},"Advanced Automation","Extended AI Agent Capabilities","Advanced Workflow Management","Enhanced File Management","Higher Monthly AI Credits","Premium Support"]}];
+const money=n=>CFG.CUR+" "+n.toLocaleString("en-US");
+$('plans').innerHTML=PK.map((x,i)=>`<div class="plan rv ${x.hot?'hot':''}" style="transition-delay:${i*90}ms">${x.hot?'<div class="tag">MOST POPULAR</div>':''}<h3>${x.n}</h3><div class="price">${money(x.p)}</div><ul>${x.f.map(f=>f.t?`<li class="ev">${f.t}</li>`:`<li>${f}</li>`).join('')}</ul><button class="btn ${x.hot?'p':''}" data-k="${x.k}">${x.btn}</button></div>`).join('');
+$('plans').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(b)openM(b.dataset.k)});
+document.querySelectorAll('.ic').forEach(e=>e.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+P[e.dataset.i]+'</svg>');
+/* marquee */
+const T=["Voice AI","Hindi","Urdu","English","Mobile","Chromebook","Laptop","PC","Lifetime Access","Smart Assistant"];
+$('mq').innerHTML=[...T,...T].map(t=>`<span>${t}</span>`).join('');
+/* reveal + counters */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);e.target.querySelectorAll('[data-n]').forEach(c=>{let n=+c.dataset.n,i=0;const t=setInterval(()=>{i++;c.textContent=i+(c.dataset.s||'');if(i>=n)clearInterval(t)},Math.max(40,900/n))})}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach((e,i)=>{if(!e.style.transitionDelay)e.style.transitionDelay=(i%4)*90+'ms';io.observe(e)});
+/* spotlight, tilt, progress, cursor glow */
+document.querySelectorAll('.card').forEach(c=>c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--x',e.clientX-r.left+'px');c.style.setProperty('--y',e.clientY-r.top+'px')}));
+document.querySelectorAll('.plan').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-6px)`});c.addEventListener('mouseleave',()=>c.style.transform='')});
+addEventListener('scroll',()=>{$('prog').style.width=(scrollY/(document.body.scrollHeight-innerHeight)*100)+'%'},{passive:true});
+addEventListener('pointermove',e=>{$('glow').style.left=e.clientX+'px';$('glow').style.top=e.clientY+'px'});
+/* typing */
+const W=["Jarvis","Voice Assistant","AI Agent","Dost aur Madadgar"];let wi=0,ci=0,del=false;
+(function tick(){const w=W[wi];$('typed').textContent=w.slice(0,ci);if(!del&&ci<w.length)ci++;else if(!del){del=true;return setTimeout(tick,1700)}else if(del&&ci>0)ci--;else{del=false;wi=(wi+1)%W.length}setTimeout(tick,del?40:90)})();
+/* neural bg */
+const bg=$('bg'),bx=bg.getContext('2d');let pts=[];
+function rs(){bg.width=innerWidth;bg.height=innerHeight;pts=Array.from({length:Math.min(75,innerWidth/16)},()=>({x:Math.random()*bg.width,y:Math.random()*bg.height,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}))}
+rs();addEventListener('resize',rs);
+(function draw(){const c=getComputedStyle(document.documentElement).getPropertyValue('--node').trim();bx.clearRect(0,0,bg.width,bg.height);
+pts.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>bg.width)p.vx*=-1;if(p.y<0||p.y>bg.height)p.vy*=-1;bx.fillStyle='rgba('+c+',.75)';bx.beginPath();bx.arc(p.x,p.y,1.9,0,7);bx.fill();
+for(let j=i+1;j<pts.length;j++){const q=pts[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<150){bx.strokeStyle='rgba('+c+','+(.24*(1-d/150))+')';bx.beginPath();bx.moveTo(p.x,p.y);bx.lineTo(q.x,q.y);bx.stroke()}}});requestAnimationFrame(draw)})();
+/* extra animations */
+const FI=['<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>','<rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 20h20"/>','<rect x="3" y="4" width="18" height="12" rx="2"/><circle cx="12" cy="10" r="2"/><path d="M8 20h8"/>','<rect x="3" y="3" width="18" height="13" rx="2"/><path d="M8 21h8M12 16v5"/>'];
+document.querySelectorAll('.fi').forEach((e,i)=>e.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+FI[i]+'</svg>');
+for(let i=0;i<6;i++){const d=document.createElement('div');d.className='star';d.style.left=Math.random()*70+'%';d.style.top=Math.random()*40+'%';d.style.animationDelay=(i*1.6+Math.random()*2)+'s';$('stars').appendChild(d)}
+document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',e=>{const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),s=document.createElement('span');s.className='rp';s.style.cssText='width:'+d+'px;height:'+d+'px;left:'+(e.clientX-r.left-d/2)+'px;top:'+(e.clientY-r.top-d/2)+'px';b.appendChild(s);setTimeout(()=>s.remove(),700)}));
+document.querySelectorAll('.btn.p').forEach(b=>{b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();b.style.transform='translate('+((e.clientX-r.left-r.width/2)*.18)+'px,'+((e.clientY-r.top-r.height/2)*.3-3)+'px)'});b.addEventListener('pointerleave',()=>b.style.transform='')});
+addEventListener('pointermove',e=>{const l=document.querySelector('svg.lg');if(l)l.style.transform='translate('+((e.clientX/innerWidth-.5)*26)+'px,'+((e.clientY/innerHeight-.5)*26)+'px)'});
+/* confetti */
+const cf=$('cf'),cx=cf.getContext('2d');let cp=[];function cr(){cf.width=innerWidth;cf.height=innerHeight}cr();addEventListener('resize',cr);
+function boom(x,y){const C=['#22d3ee','#8b5cf6','#3b82f6','#25d366','#fff'];for(let i=0;i<80;i++)cp.push({x,y,vx:(Math.random()-.5)*14,vy:Math.random()*-13-2,s:Math.random()*7+3,c:C[i%5],r:Math.random()*6,l:90})}
+(function cl(){cx.clearRect(0,0,cf.width,cf.height);cp=cp.filter(p=>p.l>0);cp.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.45;p.r+=.2;p.l--;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.globalAlpha=Math.min(1,p.l/30);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);cx.restore()});requestAnimationFrame(cl)})();
+document.addEventListener('click',e=>{if(e.target.closest('a[href^="https://wa.me"]'))boom(e.clientX,e.clientY)});
+/* rising bubbles + cursor sparkles */
+for(let i=0;i<14;i++){const b=document.createElement('div');b.className='bub';const z=Math.random()*26+8;b.style.cssText='left:'+Math.random()*100+'%;width:'+z+'px;height:'+z+'px;animation-duration:'+(12+Math.random()*14)+'s;animation-delay:-'+Math.random()*20+'s';document.body.appendChild(b)}
+let lt=0;addEventListener('pointermove',e=>{const n=performance.now();if(n-lt<70)return;lt=n;const d=document.createElement('div');d.className='sparkle';d.style.left=e.clientX+'px';d.style.top=e.clientY+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),800)});
+/* ===== ORDERING ===== */
+const E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const withT=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
+async function getCap(n){try{if(window.claude&&claude.use)return await withT(claude.use(n),4000)}catch(e){}return null}
+function genId(){const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r=new Uint8Array(5);crypto.getRandomValues(r);const d=new Date(),z=x=>String(x).padStart(2,"0");return"JV-"+String(d.getFullYear()).slice(2)+z(d.getMonth()+1)+z(d.getDate())+"-"+[...r].map(x=>a[x%a.length]).join("")}
+async function post(body){const r=await fetch(CFG.API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});return r.ok}
+async function saveOrder(o){const db=await getCap("db");if(db){try{await db.doc("orders/"+o.id).set(o);return"db"}catch(e){}}
+ if(CFG.API){try{if(await post({action:"create",order:o}))return"api"}catch(e){}}return null}
+async function updateOrder(o,via,patch){Object.assign(o,patch);try{if(via==="db"){const db=await getCap("db");await db.doc("orders/"+o.id).update(patch);return true}if(via==="api")return await post({action:"update",id:o.id,patch})}catch(e){}return false}
+const wa=t=>"https://wa.me/"+CFG.WA+"?text="+encodeURIComponent(t);
+const md=$("md"),mb=$("mb");let cur=null,ord=null,via=null;
+function openM(k){cur=PK.find(x=>x.k===k);if(!cur)return;ord=null;via=null;formView();md.hidden=false;document.body.style.overflow="hidden";setTimeout(()=>$("fn")&&$("fn").focus(),60)}
+function closeM(){md.hidden=true;if(adm.hidden)document.body.style.overflow=""}
+$("mx").onclick=closeM;md.addEventListener("mousedown",e=>{if(e.target===md)closeM()});
+addEventListener("keydown",e=>{if(e.key==="Escape"){closeM();closeA()}});
+function sumBox(){return`<div class="sum"><div><small>Selected package</small><b>${cur.n}</b></div><div class="sp">${money(cur.p)}<small>one-time payment</small></div></div>`}
+function formView(){mb.innerHTML=`<h3 id="mt">Place your order</h3>${sumBox()}
+<p class="mut">Lifetime software access. Monthly AI credits are included. Payment is verified manually before activation.</p>
+<div class="fld"><label for="fn">Full name</label><input id="fn" autocomplete="name"><em id="e1"></em></div>
+<div class="fld"><label for="fe">Email address</label><input id="fe" type="email" autocomplete="email" inputmode="email"><em id="e2"></em></div>
+<div class="fld"><label for="fw">WhatsApp number</label><input id="fw" type="tel" autocomplete="tel" inputmode="tel" placeholder="03XX XXXXXXX"><em id="e3"></em></div>
+<label class="ck"><input type="checkbox" id="fc"><span>I confirm my details are correct and I want to order <b>${cur.n}</b> for <b>${money(cur.p)}</b>. I understand additional AI credits may require separate payment.</span></label><em id="e4"></em>
+<button class="btn p wide" id="fs">Confirm order</button>`;
+ $("fs").onclick=submitOrder;mb.querySelectorAll("input").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")submitOrder()}))}
+async function submitOrder(){
+ const n=$("fn").value.trim(),e=$("fe").value.trim(),w=$("fw").value.replace(/[\s\-()]/g,"");let ok=true;
+ const er=(id,m)=>{$(id).textContent=m;if(m)ok=false};
+ er("e1",n.length<2?"Please enter your full name.":"");
+ er("e2",/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)?"":"Please enter a valid email address.");
+ er("e3",/^\+?\d{10,15}$/.test(w)?"":"Enter a valid WhatsApp number (10 to 15 digits).");
+ er("e4",$("fc").checked?"":"Please confirm your order to continue.");
+ if(!ok)return;
+ const b=$("fs");b.disabled=true;b.textContent="Placing order...";
+ ord={id:genId(),pkg:cur.n,pkgKey:cur.k,price:cur.p,name:n,email:e,whatsapp:w,createdAt:new Date().toISOString(),paymentStatus:"unpaid",orderStatus:"pending",paymentMethod:"",paymentRef:""};
+ via=await saveOrder(ord);payView()}
+function orderMsg(extra){return["Assalam o Alaikum! JARVIS order","Order ID: "+ord.id,"Package: "+ord.pkg+" ("+money(ord.price)+", one-time)","Name: "+ord.name,"Email: "+ord.email,"WhatsApp: "+ord.whatsapp].concat(extra||[]).join("\n")}
+function payView(){mb.innerHTML=`<h3 id="mt">${via?"Order received":"Order request created"}</h3>
+<div class="bn ${via?"ok":"wn"}">${via?"Your order has been recorded. It is not marked as paid until our team verifies your payment.":"We could not record your order online, so it is not received yet. Tap Send order on WhatsApp below to place it with our team."}</div>
+<div class="oid"><small>Your order ID</small><b>${ord.id}</b><button class="tb" id="cpid">Copy</button></div>${sumBox()}
+<h4>Payment instructions</h4>${CFG.PAY.length?CFG.PAY.map(m=>`<div class="pm"><b>${E(m.name)}</b><span>${E(m.details)}</span></div>`).join(""):`<p class="mut">Our team will send you the official payment details on WhatsApp after your order is received. Please do not send money until you receive the details from the official JARVIS AI WhatsApp number 0313 1039669.</p>`}
+<a class="btn p wide" target="_blank" rel="noopener" href="${wa(orderMsg())}">Send order on WhatsApp</a>
+<h4>Payment confirmation</h4><p class="mut">After you have paid, enter your payment details below. Your order stays unpaid until we verify the payment.</p>
+<div class="fld"><label for="pm">Payment method used</label><input id="pm" placeholder="e.g. bank transfer, mobile wallet"></div>
+<div class="fld"><label for="pr">Transaction or reference ID</label><input id="pr"><em id="e5"></em></div>
+<button class="btn wide" id="pc">Submit payment confirmation</button>`;
+ $("cpid").onclick=e=>{try{navigator.clipboard.writeText(ord.id)}catch(x){}e.target.textContent="Copied"};
+ $("pc").onclick=async()=>{const r=$("pr").value.trim();if(r.length<4){$("e5").textContent="Please enter the transaction or reference ID.";return}
+  const b=$("pc");b.disabled=true;b.textContent="Submitting...";
+  const upd=await updateOrder(ord,via,{paymentStatus:"verifying",paymentMethod:$("pm").value.trim(),paymentRef:r,updatedAt:new Date().toISOString()});doneView(upd)}}
+function doneView(upd){mb.innerHTML=`<h3 id="mt">Payment confirmation submitted</h3>
+<div class="bn in"><b>Status: awaiting verification.</b> Your order is NOT marked as paid until our team checks and verifies your payment.</div>
+${upd?"":`<div class="bn wn">We could not update this online. Please send your payment reference on WhatsApp below so we can verify it.</div>`}
+<div class="oid"><small>Order ID</small><b>${ord.id}</b></div>${sumBox()}<p class="mut">Payment reference: ${E(ord.paymentRef)}</p>
+<a class="btn p wide" target="_blank" rel="noopener" href="${wa(orderMsg(["PAYMENT SUBMITTED","Method: "+(ord.paymentMethod||"-"),"Reference: "+ord.paymentRef]))}">Send payment reference on WhatsApp</a>
+<button class="btn wide" id="dn">Close</button>`;$("dn").onclick=closeM}
+/* ===== ADMIN ===== */
+const adm=$("adm"),ab=$("ab");let unsub=null,ORD=[];
+$("ax").onclick=closeA;
+function closeA(){if(adm.hidden)return;adm.hidden=true;if(unsub){unsub();unsub=null}document.body.style.overflow="";if(location.hash==="#admin")history.replaceState(null,"",location.pathname)}
+async function openA(){adm.hidden=false;document.body.style.overflow="hidden";ab.innerHTML='<h3>Order management</h3><p class="mut">Loading...</p>';
+ const db=await getCap("db"),u=await getCap("user");let own=false;try{own=!!(db&&u&&await u.isOwner())}catch(e){}
+ if(!own){ab.innerHTML='<h3>Order management</h3><div class="bn wn">Locked. This panel opens only for the page owner, signed in to claude.ai, on the published page. On a standalone website, connect your own secure backend (CFG.API) with a real admin login. Orders are never kept only in browser storage.</div>';return}
+ ab.innerHTML=`<h3>Order management</h3><div id="as" class="mut"></div>
+ <div class="ac"><div class="fld"><label for="af">Filter by order status</label><select id="af"><option value="">All orders</option><option>pending</option><option>paid</option><option>processing</option><option>completed</option></select></div><div class="fld"><label for="aq">Search</label><input id="aq" placeholder="ID, name, email, number"></div><button class="tb" id="ae">Export CSV</button></div>
+ <details class="ao"><summary>Add order manually (e.g. from WhatsApp)</summary><div class="ac"><div class="fld"><label for="mn">Name</label><input id="mn"></div><div class="fld"><label for="me">Email</label><input id="me"></div><div class="fld"><label for="mw">WhatsApp</label><input id="mw"></div><div class="fld"><label for="mp">Package</label><select id="mp">${PK.map(x=>`<option value="${x.k}">${x.n}</option>`).join("")}</select></div><button class="tb" id="ma">Add</button></div></details>
+ <div id="al"></div>`;
+ const draw=()=>{const f=$("af").value,q=$("aq").value.toLowerCase();const L=ORD.filter(o=>(!f||o.orderStatus===f)&&(!q||[o.id,o.name,o.email,o.whatsapp].join(" ").toLowerCase().includes(q)));
+  const c=k=>ORD.filter(o=>o.orderStatus===k).length;$("as").innerHTML=`<span class="pill">Total ${ORD.length}</span><span class="pill">Pending ${c("pending")}</span><span class="pill">Paid ${c("paid")}</span><span class="pill">Processing ${c("processing")}</span><span class="pill">Completed ${c("completed")}</span>`;
+  const sel=(id,v,opts)=>`<select id="${id}">${opts.map(x=>`<option${x===v?" selected":""}>${x}</option>`).join("")}</select>`;
+  $("al").innerHTML=L.length?L.map(o=>`<div class="ao"><div class="t"><b>${E(o.id)}</b><span>${E(o.pkg)} · ${money(o.price)}</span></div>
+  <div class="m">${E(o.name)} · <a href="mailto:${E(o.email)}">${E(o.email)}</a> · <a target="_blank" rel="noopener" href="https://wa.me/${E(String(o.whatsapp).replace(/^0/,"92").replace(/\D/g,""))}">${E(o.whatsapp)}</a><br>${new Date(o.createdAt).toLocaleString()}${o.paymentRef?"<br>Payment ref: "+E(o.paymentRef)+(o.paymentMethod?" ("+E(o.paymentMethod)+")":""):""}</div>
+  <div class="r"><div class="fld"><label>Payment status</label>${sel("ps-"+o.id,o.paymentStatus,["unpaid","verifying","paid"])}</div><div class="fld"><label>Order status</label>${sel("os-"+o.id,o.orderStatus,["pending","paid","processing","completed"])}</div><button class="tb" data-s="${E(o.id)}">Save</button></div></div>`).join(""):'<p class="mut">No orders to show.</p>'};
+ $("af").onchange=draw;$("aq").oninput=draw;
+ $("al").onclick=async e=>{const id=e.target.dataset&&e.target.dataset.s;if(!id)return;e.target.textContent="Saving...";try{await db.doc("orders/"+id).update({paymentStatus:$("ps-"+id).value,orderStatus:$("os-"+id).value,updatedAt:new Date().toISOString()});e.target.textContent="Saved"}catch(x){e.target.textContent="Failed"}setTimeout(()=>{if(e.target)e.target.textContent="Save"},1500)};
+ $("ma").onclick=async()=>{const k=PK.find(x=>x.k===$("mp").value),n=$("mn").value.trim();if(n.length<2)return;const o={id:genId(),pkg:k.n,pkgKey:k.k,price:k.p,name:n,email:$("me").value.trim(),whatsapp:$("mw").value.trim(),createdAt:new Date().toISOString(),paymentStatus:"unpaid",orderStatus:"pending",paymentMethod:"",paymentRef:"",source:"manual"};try{await db.doc("orders/"+o.id).set(o);["mn","me","mw"].forEach(i=>$(i).value="")}catch(x){alert("Could not save the order.")}};
+ $("ae").onclick=async()=>{const d=await getCap("downloads");if(!d)return;const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';const rows=[["id","package","price","name","email","whatsapp","created","paymentStatus","orderStatus","paymentMethod","paymentRef"]].concat(ORD.map(o=>[o.id,o.pkg,o.price,o.name,o.email,o.whatsapp,o.createdAt,o.paymentStatus,o.orderStatus,o.paymentMethod,o.paymentRef]));try{await d.save({filename:"jarvis-orders.csv",data:rows.map(r=>r.map(q).join(",")).join("\n")})}catch(x){}};
+ unsub=db.collection("orders").onSnapshot(sn=>{ORD=sn.docs.map(d=>d.data()).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));draw()},()=>{$("as").textContent="Could not load orders."})}
+if(location.hash==="#admin")openA();
+addEventListener("hashchange",()=>{if(location.hash==="#admin")openA()});
+</script>
+</body>
+</html>
